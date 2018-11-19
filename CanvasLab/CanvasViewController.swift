@@ -10,6 +10,9 @@ import UIKit
 
 class CanvasViewController: UIViewController {
 
+    @IBOutlet weak var trayView: UIView!
+    var trayOriginalCenter: CGPoint!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -20,16 +23,18 @@ class CanvasViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    @IBAction func didPanTray(_ sender: Any) {
+        let translation = (sender as AnyObject).translation(in: view)
+        if (sender as AnyObject).state == .began {
+            trayOriginalCenter = trayView.center
+        } else if (sender as AnyObject).state == .changed {
+            trayView.center = CGPoint(x: trayOriginalCenter.x, y: trayOriginalCenter.y + translation.y)
+        } else if (sender as AnyObject).state == .ended {
+            
+        }
+    }
     
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
+ 
 
 }
