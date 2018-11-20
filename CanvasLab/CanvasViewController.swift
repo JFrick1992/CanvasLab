@@ -51,7 +51,7 @@ class CanvasViewController: UIViewController {
             } else {
                 UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1, options: [], animations: {
                     self.trayView.center = CGPoint(x: self.trayView.center.x, y: self.mainView.frame.maxY-self.trayView.frame.height/2)
-                    print(self.mainView.frame.maxY)
+                    //print(self.mainView.frame.maxY)
                 }, completion: nil)
             }
         }
@@ -64,9 +64,24 @@ class CanvasViewController: UIViewController {
         if(sender.state == .began) {
             let imageView = sender.view as! UIImageView
             newlyCreatedFace = UIImageView(image: imageView.image)
+            newlyCreatedFace.isUserInteractionEnabled = true
+            let panGestureRecoginizer = UIPanGestureRecognizer(target: self, action: #selector(didPanNewImage(sender:)))
+            newlyCreatedFace.addGestureRecognizer(panGestureRecoginizer)
             view.addSubview(newlyCreatedFace)
             newlyCreatedFace.center = imageView.center
             newlyCreatedFace.center.y += trayView.frame.origin.y
+            newlyCreatedFaceOriginalCenter = newlyCreatedFace.center
+        } else if (sender.state == .changed) {
+            newlyCreatedFace.center = CGPoint(x: newlyCreatedFaceOriginalCenter.x + translation.x, y: newlyCreatedFaceOriginalCenter.y + translation.y)
+        } else if (sender.state == .ended) {
+            
+        }
+    }
+    
+    @IBAction func didPanNewImage(sender: UIPanGestureRecognizer) {
+        let translation = sender.translation(in: view)
+        if(sender.state == .began) {
+            newlyCreatedFace = sender.view as! UIImageView
             newlyCreatedFaceOriginalCenter = newlyCreatedFace.center
         } else if (sender.state == .changed) {
             newlyCreatedFace.center = CGPoint(x: newlyCreatedFaceOriginalCenter.x + translation.x, y: newlyCreatedFaceOriginalCenter.y + translation.y)
